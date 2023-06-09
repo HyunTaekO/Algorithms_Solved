@@ -23,7 +23,6 @@ func solution(_ n:Int, _ computers:[[Int]]) -> Int {
         }
     }
     while visited != t{
-        print(visited)
         if let start = visited.firstIndex(of: false) {
             visited = dfs(visited, net, start)
             result += 1
