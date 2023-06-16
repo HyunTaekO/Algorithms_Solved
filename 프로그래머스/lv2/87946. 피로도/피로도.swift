@@ -1,44 +1,49 @@
 import Foundation
 
-func combi(_ n: Int) -> [[Int]] {
-    var result: [[Int]] = []
+func permute(_ nums: [Int], _ targetNum: Int) -> [[Int]] {
+    var result = [[Int]]()
+    var visited = Array(repeating: false, count: nums.count)
     
-    func combination(_ arr: [Int]) {
-        if arr.count == n {
-            result.append(arr)
+    func permutation(_ nowPermute: [Int]) {
+        if nowPermute.count == targetNum {
+            result.append(nowPermute)
             return
-        } else {
-            for i in 0..<n {
-                if !arr.contains(i) {
-                    combination(arr + [i])    
-                }
+        }
+        for i in 0..<nums.count {
+            if visited[i] == true {
+                continue
+            }
+            else {
+                visited[i] = true
+                permutation(nowPermute + [nums[i]])
+                visited[i] = false
             }
         }
     }
-    
-    combination([])
+    permutation([])
     
     return result
 }
-
 func solution(_ k:Int, _ dungeons:[[Int]]) -> Int {
-    
-    let combination = combi(dungeons.count)
-    // print("combination: \(combination)")
-    
     var result = 0
-    combination.forEach {
-        var k = k, count = 0
-        
-        for index in $0 {
-            guard k >= dungeons[index][0] else { break }
+    var k1 = k
+    let index = Array(0..<dungeons.count)
+    let perm = permute(index, dungeons.count)
+    for i in perm {
+        var cnt = 0
+        k1 = k
+        for j in i {
+            if dungeons[j][0] <= k1 {
+                if k1 - dungeons[j][1] >= 0 {
+                    cnt += 1
+                    k1 -= dungeons[j][1]
+                }
+            }
             
-            k -= dungeons[index][1] 
-            count += 1
         }
-        
-        result = max(result, count)
+        if result < cnt {
+            result = cnt
+        }
     }
-    
     return result
 }
