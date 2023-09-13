@@ -37,10 +37,26 @@ func solution(_ maps:[String]) -> [Int] {
         return sum
     }
     
+    func dfs(x: Int, y: Int) -> Int {
+        if maps[x][y] == "X" { return 0 }
+        var sum: Int = Int(maps[x][y])!
+        visited[x][y] = true
+    
+        for i in dx.indices {
+            let nx = x + dx[i]
+            let ny = y + dy[i]
+            if nx >= row || nx < 0 || ny >= col || ny < 0 { continue }
+            if visited[nx][ny] { continue }
+            visited[nx][ny] = true
+            sum += dfs(x: nx, y: ny)
+        }
+        return sum
+    }   
+    
     for x in 0..<row {
         for y in 0..<col {
             if !visited[x][y] {
-                let sum = bfs(x: x, y: y)
+                let sum = dfs(x: x, y: y)
                 if sum > 0 {
                     result.append(sum)
                 }
